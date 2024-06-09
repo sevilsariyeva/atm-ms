@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: atmbackend-ms
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3307/atmBackend
+    username: user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: ${mainUsername:kmehdiza@gmail.com}
+#    password: "tbwv hlzb hbyx kpdo"
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#            required: true
+#          connectiontimeout: 5000
+#          timeout: 5000
+#          writetimeout: 5000

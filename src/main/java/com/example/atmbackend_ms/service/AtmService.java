@@ -7,11 +7,13 @@ import com.example.atmbackend_ms.model.Transaction;
 import com.example.atmbackend_ms.repository.AccountRepository;
 import com.example.atmbackend_ms.repository.AtmRepository;
 import com.example.atmbackend_ms.repository.TransactionRepository;
+import com.example.atmbackend_ms.util.HttpResponseConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -24,65 +26,63 @@ public class AtmService implements AtmRepository {
     private static final Logger logger = LoggerFactory.getLogger(AtmService.class);
 
     @Override
-    public String validatePin(String cardNumber, int pin) {
+    public String validatePin(String cardNumber, Integer pin) {
         return accountRepository.findByCardNumber(cardNumber)
-                .filter(account->account.getPin()==pin)
+                .filter(account->account.getPin().equals(pin))
                 .map(account -> {
-                    logger.info("PIN validation successful for card number: {}", cardNumber);
-                    return "PIN validation successful";
+                    logger.info(HttpResponseConstants.PIN_SUCCESS);
+                    return HttpResponseConstants.PIN_SUCCESS;
                 })
-                .orElseThrow(() -> new AccountNotFoundException("Invalid PIN or Account not found"));
+                .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.PIN_OR_ACCOUNT_EX));
     }
 
     @Override
     public String checkBalance(String cardNumber) {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
-                    logger.info("Balance check successful for card number: {}", cardNumber);
-                    saveTransaction(cardNumber, "CHECK_BALANCE",0, account.getBalance());
-                    return "Your balance is: " + account.getBalance();
+                    logger.info(HttpResponseConstants.BALANCE_SUCCESS);
+                    saveTransaction(cardNumber, "CHECK_BALANCE",null, account.getBalance());
+                    return HttpResponseConstants.BALANCE_SUCCESS+". Your balance is: " + account.getBalance();
                 })
-                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+                .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
 
     @Override
-    public String withDraw(String cardNumber, double amount) {
+    public String withDraw(String cardNumber, BigDecimal amount) {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
-                    if (account.getBalance() >= amount) {
-                        account.setBalance(account.getBalance() - amount);
+                    if (account.getBalance().compareTo(amount)>=0) {
+                        account.setBalance(account.getBalance().subtract(amount));
                         accountRepository.save(account);
-                        logger.info("Withdrawal successful for card number: {}", cardNumber);
+                        logger.info(HttpResponseConstants.WITHDRAW_SUCCESS);
                         saveTransaction(cardNumber, "WITHDRAW",amount, account.getBalance());
-                        return "Withdrawal successful. New balance: " + account.getBalance();
-                    } else {
-                        throw new InsufficientBalanceException("Insufficient balance");
+                        return HttpResponseConstants.WITHDRAW_SUCCESS+". New balance: " + account.getBalance();
                     }
+                        throw new InsufficientBalanceException(HttpResponseConstants.BALANCE_EX);
                 })
-                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+                .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
 
     @Override
-    public String deposit(String cardNumber, double amount) {
+    public String deposit(String cardNumber, BigDecimal amount) {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
-                    account.setBalance(account.getBalance() + amount);
+                    account.setBalance(account.getBalance().add(amount));
                     accountRepository.save(account);
-                    logger.info("Deposit successful for card number: {}", cardNumber);
+                    logger.info(HttpResponseConstants.DEPOSIT_SUCCESS;
                     saveTransaction(cardNumber, "WITHDRAW",amount, account.getBalance());
-                    return "Deposit successful. New balance: " + account.getBalance();
+                    return HttpResponseConstants.DEPOSIT_SUCCESS+". New balance: " + account.getBalance();
                 })
-                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+                .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
 
-    private void saveTransaction(String cardNumber, String type, double amount, double balanceAfterTransaction){
-        Transaction transaction=Transaction.builder()
+    private void saveTransaction(String cardNumber, String type, BigDecimal amount, BigDecimal balanceAfterTransaction){
+        transactionRepository.save(Transaction.builder()
                 .cardNumber(cardNumber)
                 .timestamp(LocalDateTime.now())
                 .type(type)
                 .amount(amount)
                 .balanceAfterTransaction(balanceAfterTransaction)
-                .build();
-        transactionRepository.save(transaction);
+                .build());
     }
 }

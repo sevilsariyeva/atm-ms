@@ -4,6 +4,8 @@ import com.example.atmbackend_ms.repository.AtmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/atm")
 public class AtmController {
@@ -21,12 +23,12 @@ public class AtmController {
     }
 
     @PostMapping("/withdraw")
-    public String withdraw(@RequestParam String cardNumber, @RequestParam double amount){
+    public String withdraw(@RequestParam String cardNumber, @RequestParam BigDecimal amount){
         return atmService.withDraw(cardNumber,amount);
     }
 
     @PostMapping("/deposit")
-    public String deposit(@RequestParam String cardNumber, @RequestParam double amount){
+    public String deposit(@RequestParam String cardNumber, @RequestParam BigDecimal amount){
         return atmService.deposit(cardNumber,amount);
     }
 }

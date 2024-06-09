@@ -16,7 +16,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf->csrf.disable())// Disabling CSRF protection
+                .csrf(csrf->csrf.disable())
                 .authorizeRequests(authorize->authorize
                         .requestMatchers("/atm/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated());

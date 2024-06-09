@@ -19,6 +19,8 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String Email;
+
     private String cardNumber;
 
     private Integer pin;

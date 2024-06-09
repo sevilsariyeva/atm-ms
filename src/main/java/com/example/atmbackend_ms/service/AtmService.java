@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class AtmService {
@@ -25,6 +24,8 @@ public class AtmService {
     private TransactionRepository transactionRepository;
     @Autowired
     private AtmRepository atmRepository;
+    @Autowired
+    private EmailService emailService;
     private static final Logger logger = LoggerFactory.getLogger(AtmService.class);
 
     public String validatePin(String cardNumber, Integer pin) {
@@ -55,6 +56,7 @@ public class AtmService {
                         accountRepository.save(account);
                         logger.info(HttpResponseConstants.WITHDRAW_SUCCESS);
                         saveTransaction(cardNumber, "WITHDRAW",amount, account.getBalance());
+                        emailService.sendEmail(account.getEmail(), HttpResponseConstants.WITHDRAW_SUCCESS, "You have withdrawn "+amount);
                         return HttpResponseConstants.WITHDRAW_SUCCESS+". New balance: " + account.getBalance();
                     }
                         throw new InsufficientBalanceException(HttpResponseConstants.BALANCE_EX);

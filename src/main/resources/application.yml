@@ -12,18 +12,18 @@ spring:
     hibernate:
       ddl-auto: update
 
-#  mail:
-#    host: smtp.gmail.com
-#    port: 587
-#    username: ${mainUsername:kmehdiza@gmail.com}
-#    password: "tbwv hlzb hbyx kpdo"
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
-#            required: true
-#          connectiontimeout: 5000
-#          timeout: 5000
-#          writetimeout: 5000
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mainUsername:sevilsariyeva00@gmail.com}
+    password: "..."
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000

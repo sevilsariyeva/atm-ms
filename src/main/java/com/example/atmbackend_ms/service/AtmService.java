@@ -18,14 +18,15 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class AtmService implements AtmRepository {
+public class AtmService {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private AtmRepository atmRepository;
     private static final Logger logger = LoggerFactory.getLogger(AtmService.class);
 
-    @Override
     public String validatePin(String cardNumber, Integer pin) {
         return accountRepository.findByCardNumber(cardNumber)
                 .filter(account->account.getPin().equals(pin))
@@ -36,7 +37,6 @@ public class AtmService implements AtmRepository {
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.PIN_OR_ACCOUNT_EX));
     }
 
-    @Override
     public String checkBalance(String cardNumber) {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
@@ -47,7 +47,6 @@ public class AtmService implements AtmRepository {
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
 
-    @Override
     public String withDraw(String cardNumber, BigDecimal amount) {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
@@ -63,13 +62,12 @@ public class AtmService implements AtmRepository {
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
 
-    @Override
     public String deposit(String cardNumber, BigDecimal amount) {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
                     account.setBalance(account.getBalance().add(amount));
                     accountRepository.save(account);
-                    logger.info(HttpResponseConstants.DEPOSIT_SUCCESS;
+                    logger.info(HttpResponseConstants.DEPOSIT_SUCCESS);
                     saveTransaction(cardNumber, "WITHDRAW",amount, account.getBalance());
                     return HttpResponseConstants.DEPOSIT_SUCCESS+". New balance: " + account.getBalance();
                 })

@@ -56,7 +56,7 @@ public class AtmService {
                         accountRepository.save(account);
                         logger.info(HttpResponseConstants.WITHDRAW_SUCCESS);
                         saveTransaction(cardNumber, "WITHDRAW",amount, account.getBalance());
-                        emailService.sendEmail(account.getEmail(), HttpResponseConstants.WITHDRAW_SUCCESS, "You have withdrawn "+amount);
+                        //emailService.sendEmail(account.getEmail(), HttpResponseConstants.WITHDRAW_SUCCESS, "You have withdrawn "+amount);
                         return HttpResponseConstants.WITHDRAW_SUCCESS+". New balance: " + account.getBalance();
                     }
                         throw new InsufficientBalanceException(HttpResponseConstants.BALANCE_EX);
@@ -74,6 +74,29 @@ public class AtmService {
                     return HttpResponseConstants.DEPOSIT_SUCCESS+". New balance: " + account.getBalance();
                 })
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
+    }
+
+    public String transfer(String fromCardNumber, String toCardNumber, BigDecimal amount){
+        Account fromAccount=accountRepository.findByCardNumber(fromCardNumber)
+                .orElseThrow(()->new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
+        Account toAccount=accountRepository.findByCardNumber(toCardNumber)
+                .orElseThrow(()->new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
+        if(fromAccount.getBalance().compareTo(toAccount.getBalance())<0){
+            throw new InsufficientBalanceException(HttpResponseConstants.BALANCE_EX);
+        }
+
+        fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
+        toAccount.setBalance(toAccount.getBalance().add(amount));
+
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
+
+        saveTransaction(fromCardNumber,"TRANSFER_OUT",amount,fromAccount.getBalance());
+        saveTransaction(toCardNumber,"TRANSFER_IN",amount,toAccount.getBalance());
+
+        logger.info(HttpResponseConstants.TRANSFER_SUCCESS);
+
+        return HttpResponseConstants.TRANSFER_SUCCESS;
     }
 
     private void saveTransaction(String cardNumber, String type, BigDecimal amount, BigDecimal balanceAfterTransaction){

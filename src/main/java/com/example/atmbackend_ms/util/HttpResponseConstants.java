@@ -13,6 +13,7 @@ public class HttpResponseConstants {
     public static final String BALANCE_EX="Insufficient balance";
     public static final String DEPOSIT_SUCCESS="Deposit successful";
     public static final String BALANCE_SUCCESS="Balance check successful";
+    public static final String TRANSFER_SUCCESS="Transfer successful";
 
     private HttpResponseConstants(){
 

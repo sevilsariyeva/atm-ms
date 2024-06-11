@@ -1,6 +1,7 @@
 package com.example.atmbackend_ms.controller;
 
 import com.example.atmbackend_ms.service.AtmService;
+import com.example.atmbackend_ms.service.AtmServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,8 @@ import java.math.BigDecimal;
 public class AtmController {
     @Autowired
     private AtmService atmService;
+    @Autowired
+    private AtmServiceFactory atmServiceFactory;
 
     @PostMapping("/enter-pin")
     public String enterPin(@RequestParam String cardNumber, @RequestParam Integer pin){

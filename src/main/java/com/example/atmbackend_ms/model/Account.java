@@ -26,4 +26,7 @@ public class Account {
     private Integer pin;
 
     private BigDecimal balance;
+
+    @Version
+    private Long version;
 }

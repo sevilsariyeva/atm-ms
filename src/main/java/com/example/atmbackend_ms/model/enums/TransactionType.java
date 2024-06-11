@@ -1,4 +1,4 @@
-package com.example.atmbackend_ms.util.enums;
+package com.example.atmbackend_ms.model.enums;
 
 public enum TransactionType {
     CHECK_BALANCE,

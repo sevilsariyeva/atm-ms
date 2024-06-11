@@ -8,7 +8,7 @@ import com.example.atmbackend_ms.repository.AccountRepository;
 import com.example.atmbackend_ms.repository.AtmRepository;
 import com.example.atmbackend_ms.repository.TransactionRepository;
 import com.example.atmbackend_ms.util.HttpResponseConstants;
-import com.example.atmbackend_ms.util.enums.TransactionType;
+import com.example.atmbackend_ms.model.enums.TransactionType;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

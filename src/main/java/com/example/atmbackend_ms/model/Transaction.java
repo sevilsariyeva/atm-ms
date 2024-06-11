@@ -1,6 +1,6 @@
 package com.example.atmbackend_ms.model;
 
-import com.example.atmbackend_ms.util.enums.TransactionType;
+import com.example.atmbackend_ms.model.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

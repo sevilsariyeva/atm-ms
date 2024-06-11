@@ -1,7 +1,7 @@
 package com.example.atmbackend_ms.controller;
 
 import com.example.atmbackend_ms.service.AtmService;
-import com.example.atmbackend_ms.service.AtmServiceFactory;
+import com.example.atmbackend_ms.factory.AtmServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

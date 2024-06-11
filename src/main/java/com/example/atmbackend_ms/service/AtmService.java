@@ -81,7 +81,7 @@ public class AtmService {
     public String transfer(String fromCardNumber, String toCardNumber, BigDecimal amount){
         Account fromAccount=getAccountByCardNumber(fromCardNumber);
         Account toAccount=getAccountByCardNumber(toCardNumber);
-        if(fromAccount.getBalance().compareTo(toAccount.getBalance())<0){
+        if(fromAccount.getBalance().compareTo(amount)<0){
             throw new InsufficientBalanceException(HttpResponseConstants.BALANCE_EX);
         }
 

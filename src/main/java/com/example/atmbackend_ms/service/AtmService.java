@@ -8,6 +8,8 @@ import com.example.atmbackend_ms.repository.AccountRepository;
 import com.example.atmbackend_ms.repository.AtmRepository;
 import com.example.atmbackend_ms.repository.TransactionRepository;
 import com.example.atmbackend_ms.util.HttpResponseConstants;
+import com.example.atmbackend_ms.util.enums.TransactionType;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +44,12 @@ public class AtmService {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
                     logger.info(HttpResponseConstants.BALANCE_SUCCESS);
-                    saveTransaction(cardNumber, "CHECK_BALANCE",null, account.getBalance());
+                    saveTransaction(null, cardNumber,TransactionType.CHECK_BALANCE,null, account.getBalance());
                     return HttpResponseConstants.BALANCE_SUCCESS+". Your balance is: " + account.getBalance();
                 })
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
-
+    @Transactional
     public String withDraw(String cardNumber, BigDecimal amount) {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
@@ -55,7 +57,7 @@ public class AtmService {
                         account.setBalance(account.getBalance().subtract(amount));
                         accountRepository.save(account);
                         logger.info(HttpResponseConstants.WITHDRAW_SUCCESS);
-                        saveTransaction(cardNumber, "WITHDRAW",amount, account.getBalance());
+                        saveTransaction(cardNumber, null, TransactionType.WITHDRAW,amount, account.getBalance());
                         //emailService.sendEmail(account.getEmail(), HttpResponseConstants.WITHDRAW_SUCCESS, "You have withdrawn "+amount);
                         return HttpResponseConstants.WITHDRAW_SUCCESS+". New balance: " + account.getBalance();
                     }
@@ -63,24 +65,22 @@ public class AtmService {
                 })
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
-
+    @Transactional
     public String deposit(String cardNumber, BigDecimal amount) {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
                     account.setBalance(account.getBalance().add(amount));
                     accountRepository.save(account);
                     logger.info(HttpResponseConstants.DEPOSIT_SUCCESS);
-                    saveTransaction(cardNumber, "WITHDRAW",amount, account.getBalance());
+                    saveTransaction(null, cardNumber, TransactionType.DEPOSIT, amount, account.getBalance());
                     return HttpResponseConstants.DEPOSIT_SUCCESS+". New balance: " + account.getBalance();
                 })
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
-
+    @Transactional
     public String transfer(String fromCardNumber, String toCardNumber, BigDecimal amount){
-        Account fromAccount=accountRepository.findByCardNumber(fromCardNumber)
-                .orElseThrow(()->new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
-        Account toAccount=accountRepository.findByCardNumber(toCardNumber)
-                .orElseThrow(()->new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
+        Account fromAccount=getAccountByCardNumber(fromCardNumber);
+        Account toAccount=getAccountByCardNumber(toCardNumber);
         if(fromAccount.getBalance().compareTo(toAccount.getBalance())<0){
             throw new InsufficientBalanceException(HttpResponseConstants.BALANCE_EX);
         }
@@ -91,21 +91,27 @@ public class AtmService {
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
 
-        saveTransaction(fromCardNumber,"TRANSFER_OUT",amount,fromAccount.getBalance());
-        saveTransaction(toCardNumber,"TRANSFER_IN",amount,toAccount.getBalance());
+        saveTransaction(fromCardNumber,toCardNumber, TransactionType.TRANSFER_OUT, amount,fromAccount.getBalance());
+        saveTransaction(toCardNumber,toCardNumber,TransactionType.TRANSFER_IN, amount,toAccount.getBalance());
 
         logger.info(HttpResponseConstants.TRANSFER_SUCCESS);
 
         return HttpResponseConstants.TRANSFER_SUCCESS;
     }
 
-    private void saveTransaction(String cardNumber, String type, BigDecimal amount, BigDecimal balanceAfterTransaction){
+    private void saveTransaction(String fromCardNumber,String toCardNumber, TransactionType type, BigDecimal amount, BigDecimal balanceAfterTransaction){
         transactionRepository.save(Transaction.builder()
-                .cardNumber(cardNumber)
+                .fromCardNumber(fromCardNumber)
+                .toCardNumber(toCardNumber)
                 .timestamp(LocalDateTime.now())
                 .type(type)
                 .amount(amount)
                 .balanceAfterTransaction(balanceAfterTransaction)
                 .build());
+    }
+
+    private Account getAccountByCardNumber(String cardNumber){
+        return accountRepository.findByCardNumber(cardNumber)
+                .orElseThrow(()->new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
 }

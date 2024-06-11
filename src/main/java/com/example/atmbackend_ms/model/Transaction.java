@@ -1,5 +1,6 @@
 package com.example.atmbackend_ms.model;
 
+import com.example.atmbackend_ms.util.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,9 +21,13 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String cardNumber;
+    private String fromCardNumber;
+    private String toCardNumber;
     private LocalDateTime timestamp;
-    private String type;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+
     private BigDecimal amount;
     private BigDecimal balanceAfterTransaction;
 }

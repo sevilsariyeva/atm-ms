@@ -21,6 +21,7 @@ public class Account {
 
     private String email;
 
+    @Column(unique = true)
     private String cardNumber;
 
     private Integer pin;

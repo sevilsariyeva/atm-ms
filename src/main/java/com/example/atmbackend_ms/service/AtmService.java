@@ -105,7 +105,7 @@ public class AtmService {
                 .fromCardNumber(fromCardNumber)
                 .toCardNumber(toCardNumber)
                 .timestamp(LocalDateTime.now())
-                .type(type.toString())
+                .type(type)
                 .amount(amount)
                 .balanceAfterTransaction(balanceAfterTransaction)
                 .build());

@@ -11,7 +11,11 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: transactions
   mail:
     host: smtp.gmail.com
     port: 587

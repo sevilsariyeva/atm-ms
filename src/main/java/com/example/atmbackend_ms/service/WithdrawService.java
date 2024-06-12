@@ -46,7 +46,7 @@ public class WithdrawService extends BaseTransactionService {
         transactionRepository.save(Transaction.builder()
                 .fromCardNumber(fromCardNumber)
                 .timestamp(LocalDateTime.now())
-                .type(type.toString())
+                .type(type)
                 .amount(amount)
                 .balanceAfterTransaction(balanceAfterTransaction)
                 .build());

@@ -42,7 +42,7 @@ public class DepositService extends BaseTransactionService {
         transactionRepository.save(Transaction.builder()
                 .toCardNumber(toCardNumber)
                 .timestamp(LocalDateTime.now())
-                .type(type.toString())
+                .type(type)
                 .amount(amount)
                 .balanceAfterTransaction(balanceAfterTransaction)
                 .build());

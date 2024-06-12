@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 @Service
-public class DepositService extends TransactionTypeService{
+public class DepositService extends BaseTransactionService {
     @Autowired
     private AccountRepository accountRepository;
 
@@ -38,11 +38,11 @@ public class DepositService extends TransactionTypeService{
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
 
-    private void saveTransaction(String toCardNumber, TransactionType type, BigDecimal amount, BigDecimal balanceAfterTransaction){
+    private <T extends Enum<T>>void saveTransaction(String toCardNumber, T type, BigDecimal amount, BigDecimal balanceAfterTransaction){
         transactionRepository.save(Transaction.builder()
                 .toCardNumber(toCardNumber)
                 .timestamp(LocalDateTime.now())
-                .type(type)
+                .type(type.toString())
                 .amount(amount)
                 .balanceAfterTransaction(balanceAfterTransaction)
                 .build());

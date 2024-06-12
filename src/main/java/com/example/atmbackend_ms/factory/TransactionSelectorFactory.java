@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class TransactionSelectorFactory {
     @Autowired
     private WithdrawProvider withdrawProvider;
-
+    @Autowired
     private DepositProvider depositProvider;
 
     public TransactionProvider selectTransactionProvider(TransactionType type){

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class AtmController {
     private final AtmService atmService;
 
-    @PostMapping("/enter-pin")
+    @PostMapping("/pin")
     public String enterPin(@RequestParam String cardNumber, @RequestParam Integer pin){
         return atmService.validatePin(cardNumber, pin);
     }

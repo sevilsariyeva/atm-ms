@@ -4,6 +4,7 @@ import com.example.atmbackend_ms.exception.AccountNotFoundException;
 import com.example.atmbackend_ms.exception.InsufficientBalanceException;
 import com.example.atmbackend_ms.model.Account;
 import com.example.atmbackend_ms.model.Transaction;
+import com.example.atmbackend_ms.model.enums.TransferType;
 import com.example.atmbackend_ms.repository.AccountRepository;
 import com.example.atmbackend_ms.repository.AtmRepository;
 import com.example.atmbackend_ms.repository.TransactionRepository;
@@ -44,7 +45,7 @@ public class AtmService {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
                     logger.info(HttpResponseConstants.BALANCE_SUCCESS);
-                    saveTransaction(null, cardNumber,TransactionType.CHECK_BALANCE,null, account.getBalance());
+                    saveTransaction(null, cardNumber, TransferType.CHECK_BALANCE,null, account.getBalance());
                     return HttpResponseConstants.BALANCE_SUCCESS+". Your balance is: " + account.getBalance();
                 })
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
@@ -91,20 +92,20 @@ public class AtmService {
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
 
-        saveTransaction(fromCardNumber,toCardNumber, TransactionType.TRANSFER_OUT, amount,fromAccount.getBalance());
-        saveTransaction(toCardNumber,toCardNumber,TransactionType.TRANSFER_IN, amount,toAccount.getBalance());
+        saveTransaction(fromCardNumber,toCardNumber, TransferType.TRANSFER_OUT, amount,fromAccount.getBalance());
+        saveTransaction(toCardNumber,toCardNumber,TransferType.TRANSFER_IN, amount,toAccount.getBalance());
 
         logger.info(HttpResponseConstants.TRANSFER_SUCCESS);
 
         return HttpResponseConstants.TRANSFER_SUCCESS;
     }
 
-    private void saveTransaction(String fromCardNumber,String toCardNumber, TransactionType type, BigDecimal amount, BigDecimal balanceAfterTransaction){
+    private <T extends Enum<T>>void saveTransaction(String fromCardNumber,String toCardNumber, T type, BigDecimal amount, BigDecimal balanceAfterTransaction){
         transactionRepository.save(Transaction.builder()
                 .fromCardNumber(fromCardNumber)
                 .toCardNumber(toCardNumber)
                 .timestamp(LocalDateTime.now())
-                .type(type)
+                .type(type.toString())
                 .amount(amount)
                 .balanceAfterTransaction(balanceAfterTransaction)
                 .build());

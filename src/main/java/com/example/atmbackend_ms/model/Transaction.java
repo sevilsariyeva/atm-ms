@@ -1,6 +1,7 @@
 package com.example.atmbackend_ms.model;
 
 import com.example.atmbackend_ms.model.enums.TransactionType;
+import com.example.atmbackend_ms.model.enums.TransferType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +26,7 @@ public class Transaction {
     private String toCardNumber;
     private LocalDateTime timestamp;
 
-    @Enumerated(EnumType.STRING)
-    private TransactionType type;
+    private String type;
 
     private BigDecimal amount;
     private BigDecimal balanceAfterTransaction;

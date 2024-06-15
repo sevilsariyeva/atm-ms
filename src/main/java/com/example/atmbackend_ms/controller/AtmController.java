@@ -1,11 +1,17 @@
 package com.example.atmbackend_ms.controller;
 
+import com.example.atmbackend_ms.context.AtmContext;
+import com.example.atmbackend_ms.model.enums.AtmState;
 import com.example.atmbackend_ms.service.AtmService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/atm")
@@ -13,9 +19,23 @@ import java.math.BigDecimal;
 public class AtmController {
     private final AtmService atmService;
 
+    private final AtmContext atmContext;
+
+    @PostMapping("/insertCard")
+    public ResponseEntity<String> insertCard(@RequestParam String cardNumber) {
+        return Optional.ofNullable(atmContext.getAtmState())
+                .filter(state -> state == AtmState.READY)
+                .map(state -> {
+                    atmContext.setCardNumber(cardNumber);
+                    atmContext.setAtmState(AtmState.PIN);
+                    return ResponseEntity.ok("Card inserted. Please enter your PIN.");
+                })
+                .orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid state for inserting card."));
+    }
     @PostMapping("/pin")
     public String enterPin(@RequestParam String cardNumber, @RequestParam Integer pin){
-        return atmService.validatePin(cardNumber, pin);
+        atmContext.setAtmState(AtmState.SELECT_TRANSACTION);
+        return atmService.validatePin(atmContext.getCardNumber(), pin);
     }
 
     @GetMapping("/balance")

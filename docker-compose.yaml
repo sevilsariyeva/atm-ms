@@ -15,6 +15,19 @@ services:
       - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
 volumes:
   db_data:
-
+  mongo-data:
+    driver: local

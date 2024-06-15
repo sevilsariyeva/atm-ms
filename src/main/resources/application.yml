@@ -13,9 +13,7 @@ spring:
       ddl-auto: update
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: transactions
+      uri: mongodb://root:example@localhost:27017/atmbackend?authSource=admin&authMechanism=SCRAM-SHA-1
   mail:
     host: smtp.gmail.com
     port: 587

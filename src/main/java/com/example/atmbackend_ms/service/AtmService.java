@@ -1,9 +1,12 @@
 package com.example.atmbackend_ms.service;
 
+import com.example.atmbackend_ms.context.AtmContext;
 import com.example.atmbackend_ms.exception.AccountNotFoundException;
 import com.example.atmbackend_ms.exception.InsufficientBalanceException;
+import com.example.atmbackend_ms.exception.InvalidCardStateException;
 import com.example.atmbackend_ms.model.Account;
 import com.example.atmbackend_ms.model.Transaction;
+import com.example.atmbackend_ms.model.enums.AtmState;
 import com.example.atmbackend_ms.model.enums.TransferType;
 import com.example.atmbackend_ms.repository.AccountRepository;
 import com.example.atmbackend_ms.repository.AtmRepository;
@@ -14,10 +17,12 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class AtmService {
@@ -29,6 +34,8 @@ public class AtmService {
     private AtmRepository atmRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private AtmContext atmContext;
     private static final Logger logger = LoggerFactory.getLogger(AtmService.class);
 
     public String validatePin(String cardNumber, Integer pin) {
@@ -49,6 +56,15 @@ public class AtmService {
                     return HttpResponseConstants.BALANCE_SUCCESS+". Your balance is: " + account.getBalance();
                 })
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
+    }
+    public String insertCard(String cardNumber){
+        return Optional.ofNullable(atmContext.getAtmState())
+                .filter(state->state.equals(AtmState.READY))
+                .map(state->{AtmContext.builder()
+                        .cardNumber(cardNumber)
+                        .atmState(AtmState.PIN).build();
+                return HttpResponseConstants.INSERT_SUCCESS;})
+                .orElseThrow(()->new InvalidCardStateException(HttpResponseConstants.INSERT_EX));
     }
     @Transactional
     public String withDraw(String cardNumber, BigDecimal amount) {

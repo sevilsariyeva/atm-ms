@@ -3,6 +3,7 @@ package com.example.atmbackend_ms.controller;
 import com.example.atmbackend_ms.context.AtmContext;
 import com.example.atmbackend_ms.model.enums.AtmState;
 import com.example.atmbackend_ms.service.AtmService;
+import com.example.atmbackend_ms.util.HttpResponseConstants;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,11 @@ public class AtmController {
 
     @PostMapping("/insertCard")
     public ResponseEntity<String> insertCard(@RequestParam String cardNumber) {
-        return Optional.ofNullable(atmContext.getAtmState())
-                .filter(state -> state == AtmState.READY)
-                .map(state -> {
-                    atmContext.setCardNumber(cardNumber);
-                    atmContext.setAtmState(AtmState.PIN);
-                    return ResponseEntity.ok("Card inserted. Please enter your PIN.");
-                })
-                .orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid state for inserting card."));
+        return Optional.ofNullable(atmService.insertCard(cardNumber))
+                .filter(response-> HttpResponseConstants.INSERT_SUCCESS.equals(response))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(HttpResponseConstants.INSERT_EX));
+
     }
     @PostMapping("/pin")
     public String enterPin(@RequestParam String cardNumber, @RequestParam Integer pin){

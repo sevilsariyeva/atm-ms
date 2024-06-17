@@ -6,6 +6,8 @@ public class HttpResponseConstants {
     public static final String PATH="path";
     public static final String ERROR="error";
     public static final String ERRORS="errors";
+    public static final String INSERT_SUCCESS="Card inserted. Please enter your PIN.";
+    public static final String INSERT_EX="Invalid state for inserting card.";
     public static final String PIN_SUCCESS="PIN validation successful";
     public static final String PIN_OR_ACCOUNT_EX="Invalid PIN or Account not found";
     public static final String ACCOUNT_EX="Account not found";

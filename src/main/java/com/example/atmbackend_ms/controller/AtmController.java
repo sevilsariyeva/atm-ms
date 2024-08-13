@@ -1,6 +1,7 @@
 package com.example.atmbackend_ms.controller;
 
 import com.example.atmbackend_ms.context.AtmContext;
+import com.example.atmbackend_ms.model.Account;
 import com.example.atmbackend_ms.model.enums.AtmState;
 import com.example.atmbackend_ms.service.AtmService;
 import com.example.atmbackend_ms.util.HttpResponseConstants;
@@ -35,7 +36,10 @@ public class AtmController {
         atmContext.setAtmState(AtmState.SELECT_TRANSACTION);
         return atmService.validatePin(atmContext.getCardNumber(), pin);
     }
-
+    @GetMapping("/check-card-number")
+    public Account checkCardNumber(@RequestParam String cardNumber){
+        return atmService.checkCardNumberexists(cardNumber);
+    }
     @GetMapping("/balance")
     public String checkBalance(@RequestParam String cardNumber){
         return atmService.checkBalance(cardNumber);

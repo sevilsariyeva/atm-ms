@@ -1,0 +1,225 @@
+/* #mainDiv {
+  width: 700px;
+  height: 600px;
+  background-color: white;
+  margin: 0 auto;
+  text-align: center;
+  background-color: rgb(200, 223, 222);
+} */
+body {
+  background-color: #2e2e2e;
+  color: #fff;
+  font-family: monospace, serif;
+  letter-spacing: 0.05em;
+}
+
+#mainDiv {
+  width: 300px;
+  padding: 64px 15px 24px;
+  margin: 10% auto;
+  .control {
+    margin: 0 0 24px;
+    text-align: center;
+  }
+
+  .block-cube {
+    position: relative;
+  }
+
+  .block-cube .bg-top {
+    position: absolute;
+    height: 10px;
+    background: linear-gradient(
+      90deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(52, 9, 121, 1) 37%,
+      rgba(0, 212, 255, 1) 94%
+    );
+    bottom: 100%;
+    left: 5px;
+    right: -5px;
+    transform: skew(-45deg, 0);
+  }
+
+  .block-cube .bg-inner {
+    background: #212121;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .block-cube .bg-right {
+    position: absolute;
+    background: rgba(0, 212, 255, 1);
+    top: -5px;
+    z-index: 0;
+    bottom: 5px;
+    width: 10px;
+    left: 100%;
+    transform: skew(0, -45deg);
+  }
+
+  .block-cube .bg-right .bg-inner,
+  .block-cube .bg-top .bg-inner {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .block-cube .bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(52, 9, 121, 1) 37%,
+      rgba(0, 212, 255, 1) 94%
+    );
+  }
+
+  .block-input button {
+    width: 100%;
+    padding: 14px 16px;
+    background: transparent;
+    outline: none;
+    border: 0;
+    color: #fff;
+    font-family: monospace;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+  }
+
+  .block-input button:focus ~ .bg-right .bg-inner,
+  .block-input button:focus ~ .bg-top .bg-inner,
+  .block-input button:focus ~ .bg-inner {
+    top: 100%;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .block-cube:hover .bg-top,
+  .block-cube:hover .bg-right,
+  .block-cube:hover .bg {
+    background: rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* #mainDiv {
+  margin-top: 10%;
+  display: block;
+  text-align: center;
+} */
+#submitCardNumBtn, #submitPinBtn {
+  display: block;
+  margin: 3% auto;
+  padding: 5px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  font-family: "Times New Roman", Times, serif;
+}
+#enterCardBtn,
+#registerBtn {
+  display: block;
+  width: 300px;
+  background-color: yellow;
+  padding: 20px;
+  cursor: pointer;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 20px;
+  text-decoration: none;
+  margin: 5% auto;
+}
+
+#cardNumberInput {
+  padding: 10px;
+  font-size: 20px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Remove the spin buttons in Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+#register,
+input {
+  font-family: "Open Sans Condensed", sans-serif;
+  text-decoration: none;
+  position: relative;
+  width: 70%;
+  display: block;
+  margin: 9px auto;
+  font-size: 17px;
+  color: #ffffff;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(177, 176, 176, 0.815);
+  -webkit-transition: all 2s ease-in-out;
+  -moz-transition: all 2s ease-in-out;
+  -o-transition: all 2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 3px 3px 10px #333;
+  background: rgba(3, 3, 3, 0.18);
+}
+
+::-webkit-input-placeholder {
+  color: #000000;
+}
+:-moz-placeholder {
+  color: red;
+}
+::-moz-placeholder {
+  color: red;
+}
+:-ms-input-placeholder {
+  color: #333;
+}
+
+
+#register,
+#submitCardNumBtn, #submitPinBtn {
+  font-family: "Open Sans Condensed", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  padding: 8px 12px;
+  margin-top: 10%;
+  cursor: pointer;
+  border-radius: 5px;
+  border-color: transparent;
+  background: rgba(0, 212, 255, 1);
+}
+
+#register,
+#submitCardNumBtn,#submitPinBtn:hover {
+  opacity: 0.7;
+  background-color: rgb(255, 255, 0);
+}
+h1 {
+  font-family: "Open Sans Condensed", sans-serif;
+  position: relative;
+  margin-top: 0px;
+  text-align: center;
+  font-size: 40px;
+  color: rgba(0, 212, 255, 1);
+  text-shadow: 3px 3px 3px #0d3f08;
+}
+h2 {
+  font-size: 20px;
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+<main>
+    <div id="mainDiv">
+        <div class="control">
+            <h1>ATM</h1>
+        </div>
+
+        <div class="control block-cube block-input">
+            <button id="enterCardBtn" type="button">
+                Enter Your Card Number
+            </button>
+            <div class="bg-top">
+                <div class="bg-inner"></div>
+            </div>
+            <div class="bg-right">
+                <div class="bg-inner"></div>
+            </div>
+            <div class="bg">
+                <div class="bg-inner"></div>
+            </div>
+        </div>
+        <div class="control block-cube block-input">
+            <button id="registerBtn" type="button">Registration</button>
+            <div class="bg-top">
+                <div class="bg-inner"></div>
+            </div>
+            <div class="bg-right">
+                <div class="bg-inner"></div>
+            </div>
+            <div class="bg">
+                <div class="bg-inner"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="enterHtml" style="display: none">
+        <h2>Enter Your Card Number</h2>
+        <input id="cardNumberInput" maxlength="16" type="number" />
+        <button id="submitCardNumBtn">Submit</button>
+    </div>
+    <div id="pinHtml" style="display: none">
+        <h2>Enter Your PIN</h2>
+        <input id="pinInput" maxlength="4" type="number" />
+        <button id="submitPinBtn">Submit</button>
+    </div>
+    <div id="registerHtml" style="display: none">
+        <h1>Register</h1>
+        <form id="register-form">
+            <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Name"
+                    required
+            />
+            <input
+                    type="text"
+                    id="surname"
+                    name="surname"
+                    placeholder="Surname"
+                    required
+            />
+            <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="E-mail"
+                    required
+            />
+            <button type="button" id="register">Register</button>
+        </form>
+    </div>
+</main>
+<footer></footer>
+<script src="assets/js/index.js"></script>
+</body>
+</html>

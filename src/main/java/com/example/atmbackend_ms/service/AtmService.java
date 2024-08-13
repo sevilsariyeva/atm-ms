@@ -4,6 +4,7 @@ import com.example.atmbackend_ms.context.AtmContext;
 import com.example.atmbackend_ms.exception.AccountNotFoundException;
 import com.example.atmbackend_ms.exception.InsufficientBalanceException;
 import com.example.atmbackend_ms.exception.InvalidCardStateException;
+import com.example.atmbackend_ms.exception.InvalidPinException;
 import com.example.atmbackend_ms.model.Account;
 import com.example.atmbackend_ms.model.Transaction;
 import com.example.atmbackend_ms.model.enums.AtmState;
@@ -38,15 +39,34 @@ public class AtmService {
     private AtmContext atmContext;
     private static final Logger logger = LoggerFactory.getLogger(AtmService.class);
 
+    public String insertCard(String cardNumber){
+        return Optional.ofNullable(atmContext.getAtmState())
+                .filter(state->state.equals(AtmState.READY))
+                .map(state->{AtmContext.builder()
+                        .cardNumber(cardNumber)
+                        .atmState(AtmState.PIN).build();
+                    return HttpResponseConstants.INSERT_SUCCESS;})
+                .orElseThrow(()->new InvalidCardStateException(HttpResponseConstants.INSERT_EX));
+    }
+    public Account checkCardNumberexists(String cardNumber){
+        return accountRepository.findByCardNumber(cardNumber).orElseThrow(()->new AccountNotFoundException("Account not found"));
+    }
     public String validatePin(String cardNumber, Integer pin) {
+        String pinStr = pin != null ? pin.toString() : "";
+
+        if (pinStr.length() != 4) {
+            throw new InvalidPinException("Please enter a valid 4-digit PIN.");
+        }
+
         return accountRepository.findByCardNumber(cardNumber)
-                .filter(account->account.getPin().equals(pin))
+                .filter(account -> account.getPin().equals(pin))
                 .map(account -> {
                     logger.info(HttpResponseConstants.PIN_SUCCESS);
                     return HttpResponseConstants.PIN_SUCCESS;
                 })
-                .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.PIN_OR_ACCOUNT_EX));
+                .orElseThrow(() -> new InvalidPinException(HttpResponseConstants.INVALID_PIN_EX));
     }
+
 
     public String checkBalance(String cardNumber) {
         return accountRepository.findByCardNumber(cardNumber)
@@ -57,15 +77,7 @@ public class AtmService {
                 })
                 .orElseThrow(() -> new AccountNotFoundException(HttpResponseConstants.ACCOUNT_EX));
     }
-    public String insertCard(String cardNumber){
-        return Optional.ofNullable(atmContext.getAtmState())
-                .filter(state->state.equals(AtmState.READY))
-                .map(state->{AtmContext.builder()
-                        .cardNumber(cardNumber)
-                        .atmState(AtmState.PIN).build();
-                return HttpResponseConstants.INSERT_SUCCESS;})
-                .orElseThrow(()->new InvalidCardStateException(HttpResponseConstants.INSERT_EX));
-    }
+
     @Transactional
     public String withDraw(String cardNumber, BigDecimal amount) {
         return accountRepository.findByCardNumber(cardNumber)

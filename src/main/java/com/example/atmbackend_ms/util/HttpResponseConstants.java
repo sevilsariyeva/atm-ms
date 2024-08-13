@@ -16,6 +16,7 @@ public class HttpResponseConstants {
     public static final String DEPOSIT_SUCCESS="Deposit successful";
     public static final String BALANCE_SUCCESS="Balance check successful";
     public static final String TRANSFER_SUCCESS="Transfer successful";
+    public static final String INVALID_PIN_EX = "PIN is invalid";
 
     private HttpResponseConstants(){
 

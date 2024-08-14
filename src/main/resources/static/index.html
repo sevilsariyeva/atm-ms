@@ -9,6 +9,7 @@
 <body>
 <main>
     <div id="mainDiv">
+        <div id="mainHtml">
         <div class="control">
             <h1>ATM</h1>
         </div>
@@ -38,6 +39,7 @@
             <div class="bg">
                 <div class="bg-inner"></div>
             </div>
+        </div>
         </div>
     </div>
 
@@ -78,6 +80,49 @@
             <button type="button" id="register">Register</button>
         </form>
     </div>
+    <div id="accountDetailsHtml" style="display: none">
+        <p>Name: <span id="accountName"></span></p>
+        <p>Balance: <span id="accountBalance"></span></p>
+        <div class="control block-cube block-input">
+            <button id="withdrawBtn" type="button">
+                Withdraw
+            </button>
+            <div class="bg-top">
+                <div class="bg-inner"></div>
+            </div>
+            <div class="bg-right">
+                <div class="bg-inner"></div>
+            </div>
+            <div class="bg">
+                <div class="bg-inner"></div>
+            </div>
+        </div>
+        <div class="control block-cube block-input">
+            <button id="depositBtn" type="button">
+                Deposit
+            </button>
+            <div class="bg-top">
+                <div class="bg-inner"></div>
+            </div>
+            <div class="bg-right">
+                <div class="bg-inner"></div>
+            </div>
+            <div class="bg">
+                <div class="bg-inner"></div>
+            </div>
+        </div>
+    </div>
+    <div id="withdrawHtml" style="display: none">
+        <h2>Enter Amount</h2>
+        <input id="withdrawAmount" type="number" />
+        <button id="submitWithdrawBtn">Submit</button>
+    </div>
+    <div id="depositHtml" style="display: none">
+        <h2>Enter Amount</h2>
+        <input id="depositInput"  type="number" />
+        <button id="submitDepositBtn">Submit</button>
+    </div>
+
 </main>
 <footer></footer>
 <script src="assets/js/index.js"></script>

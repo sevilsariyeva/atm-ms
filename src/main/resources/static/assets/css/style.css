@@ -115,7 +115,9 @@ body {
   display: block;
   text-align: center;
 } */
-#submitCardNumBtn, #submitPinBtn {
+#submitCardNumBtn,
+#submitPinBtn,
+#submitWithdrawBtn {
   display: block;
   margin: 3% auto;
   padding: 5px 20px;
@@ -124,7 +126,9 @@ body {
   font-family: "Times New Roman", Times, serif;
 }
 #enterCardBtn,
-#registerBtn {
+#registerBtn,
+#withdrawBtn,
+#depositBtn{
   display: block;
   width: 300px;
   background-color: yellow;
@@ -192,9 +196,10 @@ input:focus {
   color: #333;
 }
 
-
 #register,
-#submitCardNumBtn, #submitPinBtn {
+#submitCardNumBtn,
+#submitPinBtn,
+#submitWithdrawBtn {
   font-family: "Open Sans Condensed", sans-serif;
   font-weight: bold;
   text-align: center;
@@ -207,7 +212,9 @@ input:focus {
 }
 
 #register,
-#submitCardNumBtn,#submitPinBtn:hover {
+#submitCardNumBtn,
+#submitPinBtn,
+#submitWithdrawBtn:hover {
   opacity: 0.7;
   background-color: rgb(255, 255, 0);
 }

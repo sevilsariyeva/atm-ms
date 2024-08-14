@@ -13,9 +13,14 @@ public class TransactionService {
     private final TransactionSelectorFactory transactionSelectorFactory;
 
     public String executeTransaction(TransactionType transactionType, String cardNumber, BigDecimal amount) {
-        return transactionSelectorFactory
-                .selectTransactionProvider(transactionType)
-                .createTransactionType()
-                .executeTransaction(cardNumber, amount);
+        try {
+            return "{\"success\": true, \"message\": \"" +
+                    transactionSelectorFactory.selectTransactionProvider(transactionType)
+                            .createTransactionType()
+                            .executeTransaction(cardNumber, amount) + "\"}";
+        } catch (Exception e) {
+            return "{\"success\": false, \"message\": \"Transaction failed: " + e.getMessage() + "\"}";
+        }
     }
+
 }

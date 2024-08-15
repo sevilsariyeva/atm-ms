@@ -58,16 +58,9 @@
         <form id="register-form">
             <input
                     type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Name"
-                    required
-            />
-            <input
-                    type="text"
-                    id="surname"
-                    name="surname"
-                    placeholder="Surname"
+                    id="fullname"
+                    name="fullname"
+                    placeholder="Fullname"
                     required
             />
             <input
@@ -119,9 +112,16 @@
     </div>
     <div id="depositHtml" style="display: none">
         <h2>Enter Amount</h2>
-        <input id="depositInput"  type="number" />
+        <input id="depositAmount"  type="number" />
         <button id="submitDepositBtn">Submit</button>
     </div>
+    <div id="withdrawSuccess" style="display: none">
+        <h2>Registration Successful!</h2>
+        <p>Your Card Number: <strong id="cardNumberText"></strong></p>
+        <p>Your PIN: <strong id="pinText"></strong></p>
+        <button id="returnToMain">Return back</button>
+    </div>
+
 
 </main>
 <footer></footer>

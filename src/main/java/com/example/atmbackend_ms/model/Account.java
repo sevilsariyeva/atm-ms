@@ -28,7 +28,7 @@ public class Account {
 
     private Integer pin;
 
-    private BigDecimal balance;
+    private BigDecimal balance= BigDecimal.ZERO;
 
     @Version
     private Long version;

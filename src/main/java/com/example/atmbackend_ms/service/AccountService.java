@@ -1,8 +1,11 @@
 package com.example.atmbackend_ms.service;
 
+import com.example.atmbackend_ms.model.Account;
 import com.example.atmbackend_ms.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 public class AccountService {
@@ -31,5 +34,21 @@ public class AccountService {
             cardNumber.append((int) (Math.random() * 10));
         }
         return cardNumber.toString();
+    }
+
+    public Account registerAccount(String fullname, String email) {
+        String cardNumber = generateUniqueCardNumber();
+        Integer pin = generatePin();
+
+        Account account = Account.builder()
+                .fullname(fullname)
+                .email(email)
+                .cardNumber(cardNumber)
+                .balance(BigDecimal.ZERO)
+                .pin(pin)
+                .build();
+        accountRepository.save(account);
+
+        return account;
     }
 }

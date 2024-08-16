@@ -17,13 +17,17 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 @Service
 public class WithdrawService extends BaseTransactionService {
-    @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(WithdrawService.class);
 
     @Autowired
-    private TransactionRepository transactionRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(AtmService.class);
+    public WithdrawService(AccountRepository accountRepository,
+                           TransactionRepository transactionRepository) {
+        this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
+    }
 
     @Override
     @Transactional

@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>ATM</title>
+    <link rel="icon" type="image/png" href="assets/images/atmLogo.png"/>
     <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
@@ -46,12 +47,18 @@
     <div id="enterHtml" style="display: none">
         <h2>Enter Your Card Number</h2>
         <input id="cardNumberInput" maxlength="16" type="number" />
+        <div class="buttons">
         <button id="submitCardNumBtn">Submit</button>
+        <button id="cancelEnterBtn">Cancel</button>
+        </div>
     </div>
     <div id="pinHtml" style="display: none">
         <h2>Enter Your PIN</h2>
-        <input id="pinInput" maxlength="4" type="number" />
+        <input id="pinInput" maxlength="4" type="password" />
+        <div class="buttons">
         <button id="submitPinBtn">Submit</button>
+        <button id="cancelPinBtn">Cancel</button>
+        </div>
     </div>
     <div id="registerHtml" style="display: none">
         <h1>Register</h1>
@@ -70,7 +77,10 @@
                     placeholder="E-mail"
                     required
             />
-            <button type="button" id="register">Register</button>
+            <div class="buttons">
+                <button type="button" id="register">Register</button>
+                <button id="cancelRegisterBtn">Cancel</button>
+            </div>
         </form>
     </div>
     <div id="accountDetailsHtml" style="display: none">
@@ -108,12 +118,18 @@
     <div id="withdrawHtml" style="display: none">
         <h2>Enter Amount</h2>
         <input id="withdrawAmount" type="number" />
-        <button id="submitWithdrawBtn">Submit</button>
+        <div class="buttons">
+            <button id="submitWithdrawBtn">Submit</button>
+            <button id="cancelWithdrawBtn">Cancel</button>
+        </div>
     </div>
     <div id="depositHtml" style="display: none">
         <h2>Enter Amount</h2>
         <input id="depositAmount"  type="number" />
-        <button id="submitDepositBtn">Submit</button>
+        <div class="buttons">
+            <button id="submitDepositBtn">Submit</button>
+            <button id="cancelDepositBtn">Cancel</button>
+        </div>
     </div>
     <div id="withdrawSuccess" style="display: none">
         <h2>Registration Successful!</h2>

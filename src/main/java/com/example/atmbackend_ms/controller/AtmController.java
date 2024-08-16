@@ -3,6 +3,7 @@ package com.example.atmbackend_ms.controller;
 import com.example.atmbackend_ms.context.AtmContext;
 import com.example.atmbackend_ms.model.Account;
 import com.example.atmbackend_ms.model.enums.AtmState;
+import com.example.atmbackend_ms.service.AccountService;
 import com.example.atmbackend_ms.service.AtmService;
 import com.example.atmbackend_ms.util.HttpResponseConstants;
 import lombok.Data;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AtmController {
     private final AtmService atmService;
+    private final AccountService accountService;
 
     private final AtmContext atmContext;
 
@@ -44,4 +46,18 @@ public class AtmController {
     public String checkBalance(@RequestParam String cardNumber){
         return atmService.checkBalance(cardNumber);
     }
+
+    @GetMapping("/check-pin")
+    public ResponseEntity<Boolean> checkPin(@RequestParam String cardNumber, @RequestParam String enteredPin) {
+        Optional<Account> accountOptional = accountService.findByCardNumber(cardNumber);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            boolean isPinCorrect = accountService.checkPin(enteredPin, account.getPin());
+            return ResponseEntity.ok(isPinCorrect);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+    }
+
 }

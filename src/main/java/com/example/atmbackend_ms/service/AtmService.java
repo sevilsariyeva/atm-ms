@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,16 +28,24 @@ import java.util.Optional;
 
 @Service
 public class AtmService {
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+    private final AtmRepository atmRepository;
+    private final EmailService emailService;
+    private final AtmContext atmContext;
+
     @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private TransactionRepository transactionRepository;
-    @Autowired
-    private AtmRepository atmRepository;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private AtmContext atmContext;
+    public AtmService(AccountRepository accountRepository,
+                      TransactionRepository transactionRepository,
+                      AtmRepository atmRepository,
+                      EmailService emailService,
+                      AtmContext atmContext) {
+        this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
+        this.atmRepository = atmRepository;
+        this.emailService = emailService;
+        this.atmContext = atmContext;
+    }
     private static final Logger logger = LoggerFactory.getLogger(AtmService.class);
 
     public String insertCard(String cardNumber){

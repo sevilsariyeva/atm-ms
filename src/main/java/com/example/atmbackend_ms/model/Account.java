@@ -26,10 +26,12 @@ public class Account {
     @Column(unique = true)
     private String cardNumber;
 
-    private Integer pin;
+    private String pin;
 
     private BigDecimal balance= BigDecimal.ZERO;
+    private BigDecimal deposit= BigDecimal.ZERO;
 
     @Version
     private Long version;
+
 }

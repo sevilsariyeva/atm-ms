@@ -16,20 +16,24 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 @Service
 public class DepositService extends BaseTransactionService {
-    @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(DepositService.class);
 
     @Autowired
-    private TransactionRepository transactionRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(AtmService.class);
-
+    public DepositService(AccountRepository accountRepository,
+                          TransactionRepository transactionRepository) {
+        this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
+    }
     @Override
     @Transactional
     public String executeTransaction(String cardNumber, BigDecimal amount) {
         return accountRepository.findByCardNumber(cardNumber)
                 .map(account -> {
                     account.setBalance(account.getBalance().add(amount));
+                    account.setDeposit(account.getDeposit().add(amount));
                     accountRepository.save(account);
                     logger.info(HttpResponseConstants.DEPOSIT_SUCCESS);
                     saveTransaction(cardNumber, TransactionType.DEPOSIT, amount, account.getBalance());

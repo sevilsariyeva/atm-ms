@@ -37,7 +37,7 @@ function setupInitialListeners() {
             if (returnToMainBtn) {
               returnToMainBtn.addEventListener("click", function () {
                 document.querySelector("#mainDiv").innerHTML = mainHtml;
-                setupInitialListeners(); // Re-attach event listeners
+                setupInitialListeners();
               });
             }
           } else {
@@ -49,15 +49,26 @@ function setupInitialListeners() {
           alert("An error occurred: " + error.message);
         });
     });
+    document.querySelector("#cancelRegisterBtn").addEventListener("click", function () {
+         document.querySelector("#mainDiv").innerHTML = mainHtml;
+         setupInitialListeners();
+    });
+
   });
 }
 
 function setupCardNumberInput() {
   const submitCardNumBtn = document.querySelector("#submitCardNumBtn");
+  const cancelEnterBtn = document.querySelector("#cancelEnterBtn");
   if (submitCardNumBtn) {
     submitCardNumBtn.addEventListener("click", checkCardNumber);
   }
-
+  if (cancelEnterBtn) {
+          cancelEnterBtn.addEventListener("click", function () {
+              document.querySelector("#mainDiv").innerHTML = mainHtml;
+              setupInitialListeners();
+          });
+      }
   const cardNumberInput = document.getElementById("cardNumberInput");
   if (cardNumberInput) {
     cardNumberInput.addEventListener("input", function (event) {
@@ -93,30 +104,53 @@ function checkCardNumber() {
 }
 
 function setupPinInput(account) {
-  const submitPinBtn = document.querySelector("#submitPinBtn");
-  if (submitPinBtn) {
-    submitPinBtn.addEventListener("click", function () {
-      const enteredPin = document.querySelector("#pinInput").value;
+    const submitPinBtn = document.querySelector("#submitPinBtn");
+    const cancelPinBtn = document.querySelector("#cancelPinBtn");
 
-      if (enteredPin.length !== 4) {
-        alert("PIN must be exactly 4 digits.");
-        return;
-      }
+    if (submitPinBtn) {
+        submitPinBtn.addEventListener("click", function () {
+            const enteredPin = document.querySelector("#pinInput").value;
 
-      if (isNaN(enteredPin)) {
-        alert("PIN must contain only digits.");
-        return;
-      }
+            if (enteredPin.length !== 4) {
+                alert("PIN must be exactly 4 digits.");
+                return;
+            }
 
-      if (account.pin === Number(enteredPin)) {
-        document.querySelector("#mainDiv").innerHTML = document.querySelector("#accountDetailsHtml").innerHTML;
-        setupAccountPage(account);
-      } else {
-        alert("Incorrect PIN. Please try again.");
-      }
-    });
-  }
+            if (isNaN(enteredPin)) {
+                alert("PIN must contain only digits.");
+                return;
+            }
+
+            fetch(`/atm/check-pin?cardNumber=${account.cardNumber}&enteredPin=${enteredPin}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((response) => response.json())
+            .then((isPinCorrect) => {
+                if (isPinCorrect) {
+                    document.querySelector("#mainDiv").innerHTML = document.querySelector("#accountDetailsHtml").innerHTML;
+                    setupAccountPage(account);
+                } else {
+                    alert("Incorrect PIN. Please try again.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        });
+    }
+
+    if (cancelPinBtn) {
+        cancelPinBtn.addEventListener("click", function () {
+            document.querySelector("#mainDiv").innerHTML = mainHtml;
+            setupInitialListeners();
+        });
+    }
 }
+
+
 
 function setupAccountPage(account) {
   document.querySelector("#accountName").textContent = account.fullname;
@@ -134,6 +168,11 @@ function setupAccountPage(account) {
         alert("Please enter a valid amount.");
       }
     });
+
+    document.querySelector("#cancelWithdrawBtn").addEventListener("click", function (){
+        document.querySelector("#mainDiv").innerHTML = document.querySelector("#accountDetailsHtml").innerHTML;
+        setupAccountPage(account);
+    });
   });
 
   document.querySelector("#depositBtn").addEventListener("click", function () {
@@ -150,6 +189,7 @@ function setupAccountPage(account) {
     });
   });
 }
+
 
 function executeTransaction(type, cardNumber, amount) {
   fetch(`/transaction/execute/type/${type}/${cardNumber}/${amount}`, {
